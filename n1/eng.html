@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Let’s Learn Letters! Nursery 1 English</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="kids.css"></head>
+<body class="eng"><div id="app"></div><script src="kids.js"></script>
+<script>
+var L=[['A','Apple','🍎'],['B','Ball','⚽'],['C','Cat','🐱'],['D','Dog','🐶'],['E','Egg','🥚'],['F','Fish','🐟'],['G','Goat','🐐'],['H','Hat','👒'],['I','Ice cream','🍦'],['J','Juice','🧃']];
+var Q=[],qi=0;function nextL(){if(qi%L.length===0)Q=K.shuffle(L.slice());return Q[qi++%L.length]}
+function three(l){var s=[l];while(s.length<3){var x=K.pick(L);if(s.indexOf(x)<0)s.push(x)}return K.shuffle(s)}
+function meet(a){var l=nextL(),sp=l[0]+'. '+l[0]+' is for '+l[1]+'.';
+ a.ask('Meet the letter '+l[0],'Meet the letter '+l[0]+'. '+sp+' Touch the picture to hear it again.');
+ a.play('<div class="letter">'+l[0]+l[0].toLowerCase()+'</div><button class="pic" id="pc" aria-label="'+l[1]+'">'+l[2]+'<small>'+l[1]+'</small></button>');
+ a.$('pc').onclick=function(){this.classList.add('hop');a.tone([660,880]);a.say(sp)};
+ a.choose([{html:'Next ➜'}],function(o,el){a.ok(el)},'');var b=a.$('ch').firstChild;b.className='big';b.style.animation='none'}
+function find(a){var l=nextL();a.ask('Touch the letter '+l[0],'Touch the letter '+l[0]+'.');
+ a.play('<div class="pic">'+l[2]+'<small>'+l[1]+'</small></div>');
+ a.choose(three(l).map(function(o){return {k:o[0],html:o[0]+'<small>'+o[0].toLowerCase()+'</small>',label:'letter '+o[0]}}),function(o,el){o.k===l[0]?a.ok(el,l[0]+' is for '+l[1]+'.'):a.no(el)})}
+function pic(a){var l=nextL();a.ask('Which one starts with <span style="color:var(--coral);font-size:1.4em">'+l[0]+'</span>?','Which one starts with the letter '+l[0]+'?');
+ a.play('<div class="letter">'+l[0]+'</div>');
+ a.choose(three(l).map(function(o){return {k:o[0],nm:o[1],html:o[2],label:o[1]}}),function(o,el){a.say(o.nm);o.k===l[0]?setTimeout(function(){a.ok(el,l[0]+' is for '+o.nm+'.')},900):a.no(el)},'card')}
+K.run({id:'eng',mascot:'🦉',hello:'Hello! Let’s learn our letters!',sub:'Meet letters and match them to pictures',done:'You did it! You are a letter star!',rounds:function(){return [meet,find,pic,meet,find,pic,find,pic]}});
+</script></body></html>

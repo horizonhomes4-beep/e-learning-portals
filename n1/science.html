@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Let’s Explore! Nursery 1 Science</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="kids.css"></head>
+<body class="sci"><div id="app"></div><script src="kids.js"></script>
+<script>
+var A=[['Cow','🐄','moo'],['Dog','🐶','woof woof'],['Cat','🐱','meow'],['Sheep','🐑','baa'],['Frog','🐸','ribbit'],['Duck','🦆','quack quack'],['Horse','🐴','neigh'],['Pig','🐷','oink oink']];
+var S=[['see','Eyes','👀','🌈'],['hear','Ears','👂','🎵'],['smell','Nose','👃','🌸'],['taste','Tongue','👅','🍓'],['touch','Hands','✋','🧸']];
+var QA=[],ai=0,QS=[],si=0;
+function an(){if(ai%A.length===0)QA=K.shuffle(A.slice());return QA[ai++%A.length]}
+function se(){if(si%S.length===0)QS=K.shuffle(S.slice());return QS[si++%S.length]}
+function three(arr,x){var s=[x];while(s.length<3){var y=K.pick(arr);if(s.indexOf(y)<0)s.push(y)}return K.shuffle(s)}
+function sing(el,a,k){el.classList.add('sing');a.animal(k.toLowerCase(),function(){el.classList.remove('sing')})}
+function meet(a){var x=an(),key=x[0].toLowerCase();a.ask('Meet the '+x[0]+'!','This is a '+x[0]+'. Listen!',1);
+ a.play('<button class="pic" id="pc" aria-label="'+x[0]+'">'+x[1]+'<small>'+x[0]+' says “'+x[2]+'”</small></button>');var pc=a.$('pc');
+ function go(){sing(pc,a,key);setTimeout(function(){a.say('The '+x[0]+' says '+x[2]+'!')},1900)}
+ a.rep=go;pc.onclick=go;a.say('This is a '+x[0]+'. Listen!',function(){go()});
+ a.choose([{html:'Next ➜'}],function(o,el){a.ok(el)},'');var b=a.$('ch').firstChild;b.className='big';b.style.animation='none'}
+function who(a){var x=an(),key=x[0].toLowerCase();a.ask('Who makes this sound?<small>Touch 🔊 to hear again</small>','Who makes this sound? Listen!',1);
+ a.play('<button class="pic" id="pc" aria-label="Play sound">🔊❓</button>');var pc=a.$('pc');function go(){sing(pc,a,key)}
+ a.rep=go;pc.onclick=go;a.say('Who makes this sound? Listen!',function(){go()});
+ a.choose(three(A,x).map(function(o){return {k:o[0],html:o[1]+'<small>'+o[0]+'</small>',label:o[0]}}),function(o,el){o.k===x[0]?a.ok(el,'Yes! The '+x[0]+' says '+x[2]+'!'):a.no(el)},'card')}
+function sense(a){var s=se();a.ask('Which body part helps us <span style="color:var(--coral)">'+s[0]+'</span>?','Which part of our body helps us '+s[0]+'?');
+ a.play('<div class="pic" style="font-size:7rem">'+s[3]+'</div>');
+ a.choose(three(S,s).map(function(o){return {k:o[0],html:o[2]+'<small>'+o[1]+'</small>',label:o[1]}}),function(o,el){o.k===s[0]?a.ok(el,'Yes! We '+s[0]+' with our '+s[1].toLowerCase()+'!'):a.no(el)},'card')}
+K.run({id:'sci',mascot:'🦋',hello:'Hello! Let’s explore animals and our body!',sub:'Listen to animal sounds and learn our senses',done:'You did it! You are a little scientist!',rounds:function(){return [meet,who,sense,meet,who,sense,who,sense]}});
+</script></body></html>

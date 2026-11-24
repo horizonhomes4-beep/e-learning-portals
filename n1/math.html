@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Let’s Count! Nursery 1 Maths</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&display=swap" rel="stylesheet"><link rel="stylesheet" href="kids.css"></head>
+<body class="mth"><div id="app"></div><script src="kids.js"></script>
+<script>
+var W=['zero','one','two','three','four','five','six','seven','eight','nine','ten'];
+var EM=[['🍎','apples'],['🐟','fish'],['⭐','stars'],['🐥','chicks'],['🎈','balloons'],['🚗','cars'],['🌸','flowers'],['🐞','ladybirds']];
+function nums(n){var s=[n];while(s.length<3){var x=K.rnd(1,Math.max(5,n+1));if(s.indexOf(x)<0)s.push(x)}return K.shuffle(s).map(function(x){return {n:x,html:x,label:W[x]}})}
+function rep(n,e){return new Array(n+1).join(e)}
+function count(a){var n=K.rnd(2,5),e=K.pick(EM),t=0,h='<div class="counter">Count: <b id="cn">0</b></div><div class="tray">';
+ for(var i=1;i<=n;i++)h+='<button class="obj" style="animation-delay:'+i*.09+'s" aria-label="'+e[1]+'">'+e[0]+'</button>';h+='</div>';
+ a.ask('Touch each one to count!','Let us count the '+e[1]+'. Touch each one.');a.play(h);
+ Array.prototype.forEach.call(document.querySelectorAll('.obj'),function(b){b.onclick=function(){
+  if(b.classList.contains('done'))return;b.classList.add('done');t++;b.insertAdjacentHTML('beforeend','<span class="badge">'+t+'</span>');
+  var c=a.$('cn');c.textContent=t;c.classList.remove('bump');void c.offsetWidth;c.classList.add('bump');a.tone([380+t*80]);a.say(W[t]);
+  if(t===n)setTimeout(function(){a.say('There are '+W[n]+' '+e[1]+'!',function(){a.ask('How many '+e[1]+'<small>Touch the number</small>','How many '+e[1]+' are there?');
+   a.choose(nums(n),function(o,el){o.n===n?a.ok(el):a.no(el)})})},900)}})}
+function find(a){var n=K.rnd(1,5),e=K.pick(EM);
+ a.ask('Touch the number '+n+'<small>('+W[n]+')</small>','Touch the number '+W[n]+'.');
+ a.play('<div class="tray" style="font-size:clamp(2.4rem,10vw,3.4rem)">'+rep(n,e[0])+'</div>');
+ a.choose(nums(n),function(o,el){o.n===n?a.ok(el,'Yes! This is the number '+W[n]+'.'):a.no(el)})}
+function more(a){var x=K.rnd(1,5),y;do{y=K.rnd(1,5)}while(y===x);var e1=K.pick(EM),e2;do{e2=K.pick(EM)}while(e2===e1);var win=x>y?0:1;
+ a.ask('Which group has more?','Which group has more? Touch it.');
+ a.play('<div class="groups"><button class="group" aria-label="group one">'+rep(x,e1[0])+'</button><button class="group" aria-label="group two">'+rep(y,e2[0])+'</button></div>');
+ Array.prototype.forEach.call(document.querySelectorAll('.group'),function(g,i){g.onclick=function(){i===win?a.ok(g,Math.max(x,y)+' is more than '+Math.min(x,y)+'.'):a.no(g)}})}
+K.run({id:'math',mascot:'🐻',hello:'Hello! Let’s count together!',sub:'Touch, count and play with numbers',done:'You did it! You are a counting star!',rounds:function(){return [count,find,more,count,find,more,count,find]}});
+</script></body></html>
